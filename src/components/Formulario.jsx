@@ -51,7 +51,7 @@ const Formulario = () => {
                     </label>
                     <div className='flex gap-3 items-center'>
                         {PLANES.map(plan => (
-                            <Fragment>
+                            <Fragment key={plan.id}>
                                 <label htmlFor="">{plan.nombre}</label>
                                 <input type='radio' name='plan' value={plan.id} />
                             </Fragment>
