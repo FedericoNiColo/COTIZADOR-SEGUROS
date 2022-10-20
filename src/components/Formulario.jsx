@@ -1,16 +1,30 @@
 import { Fragment } from 'react'
 import { MARCAS, YEARS, PLANES } from '../constants'
 import useCotizador from "../hooks/useCotizador"
-
+import Error from './Error'
 
 const Formulario = () => {
 
-    const { handleChangeDatos } = useCotizador()
+    const { datos, handleChangeDatos, error, setError, cotizadorSeguro } = useCotizador()
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log('chau');
+
+        if (Object.values(datos).includes('')) {
+            setError('Todos los campos son obligatorios')
+            return
+        }
+
+        setError('')
+        cotizadorSeguro()
+    }
 
     return (
         <>
 
-            <form>
+            <form onSubmit={handleSubmit}>
+                {error && <Error />}
                 <div className="my-5">
                     <label className="block mb-3 font-bold text-gray-400 uppercase">
                         Marca
@@ -18,7 +32,7 @@ const Formulario = () => {
                     <select
                         name="marca"
                         className="w-full p-3 bg-white border border-gray-200"
-                        onChange={ e =>  handleChangeDatos(e) }
+                        onChange={e => handleChangeDatos(e)}
                     >
                         <option value="">--Seleccione Marca--</option>
                         {MARCAS.map(marca => (
@@ -34,7 +48,11 @@ const Formulario = () => {
                     <label className="block mb-3 font-bold text-gray-400 uppercase">
                         AÑO
                     </label>
-                    <select name="year" className="w-full p-3 bg-white border border-gray-200">
+                    <select
+                        name="year"
+                        className="w-full p-3 bg-white border border-gray-200"
+                        onChange={e => handleChangeDatos(e)}
+                    >
                         <option value="">--Seleccione Marca--</option>
 
                         {YEARS.map(year => (
@@ -51,16 +69,25 @@ const Formulario = () => {
                     </label>
                     <div className='flex gap-3 items-center'>
                         {PLANES.map(plan => (
-                            <Fragment>
-                                <label htmlFor="">{plan.nombre}</label>
-                                <input type='radio' name='plan' value={plan.id} />
+                            <Fragment key={plan.id}>
+                                <label>{plan.nombre}</label>
+                                <input
+                                    type='radio'
+                                    name='plan'
+                                    value={plan.id}
+                                    onChange={e => handleChangeDatos(e)}
+                                />
                             </Fragment>
                         ))}
                     </div>
                 </div>
 
-                <input type='submit' className='w-full bg-indigo-500 hover:bg-indigo-600 transition-colors
-                text-white cursor-pointer p-3 uppercase font-bold' value='Cotizar' />
+                <input
+                    type='submit'
+                    className='w-full bg-indigo-500 hover:bg-indigo-600 transition-colors
+                text-white cursor-pointer p-3 uppercase font-bold'
+                    value='Cotizar'
+                />
             </form>
 
         </>
